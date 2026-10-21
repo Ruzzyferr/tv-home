@@ -1,0 +1,23 @@
+# Build output
+launcher/.gradle/
+launcher/build/
+launcher/app/build/
+launcher/local.properties
+*.iml
+.idea/
+
+# Local, per-machine state (TV IP, downloaded tools/APKs, package backups)
+scripts/.tv-ip
+scripts/.tools/
+downloads/
+backups/
+dist/
+
+# Assistant / tooling workspaces
+.claude/
+.claude-flow/
+.swarm/
+graphify-out/
+
+# Simulated user-panel workspace (personas, raw answers)
+founder/

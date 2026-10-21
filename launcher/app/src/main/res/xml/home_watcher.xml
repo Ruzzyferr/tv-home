@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Listens only to window changes of the stock launchers, so the service costs almost nothing. -->
+<accessibility-service xmlns:android="http://schemas.android.com/apk/res/android"
+    android:accessibilityEventTypes="typeWindowStateChanged"
+    android:accessibilityFeedbackType="feedbackGeneric"
+    android:canRetrieveWindowContent="false"
+    android:description="@string/watcher_description"
+    android:notificationTimeout="50"
+    android:packageNames="com.google.android.apps.tv.launcherx,com.google.android.tvlauncher" />

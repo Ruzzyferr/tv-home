@@ -1,0 +1,20 @@
+# Safe to DISABLE on Google TV (pm disable-user, never uninstall). Re-enable any time with: tv restore
+# Sources: github.com/ohernandezdev/android-tv-tune, cretezy.com/2026/ad-free-android-tv, r/googletv
+com.google.android.apps.tv.dreamx           # Ambient mode / photo screensaver (RAM + network in idle)
+com.google.android.videos                   # Google TV movie store
+com.google.android.play.games               # Play Games
+com.google.android.youtube.tvunplugged      # YouTube TV (US only service)
+android.autoinstalls.config.google.gtvpai   # silently installs promoted apps
+com.google.android.feedback                 # feedback reporter
+com.google.android.partnersetup             # partner setup leftovers
+com.google.android.syncadapters.calendar    # calendar sync, unused on a TV
+com.google.android.onetimeinitializer       # first-boot helper
+com.google.android.tvrecommendations        # recommendation rows (disable only, removing can crash Settings)
+com.mediatek.tv.retaildemo                  # Grundig/Arcelik: store demo mode
+com.mediatek.browservice                    # HbbTV browser service (~85 MB, always running); broadcast "red button" stops
+com.arcelik.chatbot                         # Arcelik "AI Chat"
+com.arcelik.tvcarehub                       # Arcelik TV Care (diagnostics / telemetry)
+com.google.android.marvin.talkback          # TalkBack screen reader
+com.android.dreams.basic                    # basic screensaver
+com.android.tv.feedbackconsent              # feedback consent prompt
+com.android.wallpaperbackup                 # wallpaper backup

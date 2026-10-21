@@ -1,0 +1,4 @@
+# Apps that are not in the TV's Play Store, installed from their OFFICIAL GitHub releases.
+# key | owner/repo | asset regex for 32-bit TVs (armeabi-v7a) | asset regex for 64-bit TVs | what it is
+brave     | brave/brave-browser | ^BraveMonoarm\.apk$                 | ^BraveMonoarm64\.apk$              | Brave tarayici (telefon surumu: en rahat telefon fare ile)
+smarttube | yuliskov/SmartTube  | ^SmartTube_stable_.*armeabi-v7a\.apk$ | ^SmartTube_stable_.*arm64-v8a\.apk$ | Reklamsiz YouTube, TV icin yapilmis

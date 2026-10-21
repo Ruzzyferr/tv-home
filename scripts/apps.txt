@@ -1,0 +1,9 @@
+# key | package | what it is for       (opened on the TV's Play Store with: tv apps <key> ...)
+tailscale  | com.tailscale.ipn              | Uzaktan erisim: evin disindan TV'yi kontrol et (telefon fare, scrcpy)
+tvbro      | com.phlox.tvwebbrowser         | Tarayici: acik kaynak, reklam engelli, kumandaya uygun
+browsehere | com.tcl.browser                | Tarayici (alternatif): hizli, fare imlecli
+puffin     | com.cloudmosa.puffinTV         | Tarayici (alternatif): bulut tabanli, zayif TV'de hizli
+airscreen  | com.ionitech.airscreen         | iPhone / Mac ekran yansitma (AirPlay alicisi)
+downloader | com.esaba.downloader           | APK indirme (Play Store'da olmayan uygulamalar icin)
+sendfiles  | com.yablio.sendfilestotv       | Telefondan / PC'den TV'ye dosya gonder
+buttonmap  | flar2.homebutton               | Kumanda tuslarini yeniden ata (or. YouTube tusu -> TV Home)

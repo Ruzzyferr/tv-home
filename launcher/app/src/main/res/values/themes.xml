@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="home_background">#FF0B0F14</color>
+
+    <style name="Theme.TvHome" parent="@android:style/Theme.Material.NoActionBar">
+        <item name="android:windowBackground">@color/home_background</item>
+        <item name="android:windowShowWallpaper">false</item>
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowFullscreen">true</item>
+        <item name="android:colorBackground">@color/home_background</item>
+    </style>
+</resources>

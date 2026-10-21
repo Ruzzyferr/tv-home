@@ -1,0 +1,5 @@
+# Optional: only with "tv debloat -Optional". Each one removes a feature you might use.
+com.google.android.katniss                  # Google Assistant + voice search (the mic button stops working)
+com.google.android.youtube.tvmusic          # YouTube Music
+com.google.android.tvtutorials              # tips and tutorials
+com.google.android.tts                      # text-to-speech (~135 MB); only needed for screen readers / spoken answers

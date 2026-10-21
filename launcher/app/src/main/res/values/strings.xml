@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">TV Home</string>
+    <string name="watcher_label">TV Home – Ana ekran yönlendirici</string>
+    <string name="watcher_description">Google TV\'nin kendi ana ekranı açıldığında TV Home\'u öne getirir. Ekran içeriğini okumaz, yalnızca hangi uygulamanın öne geldiğine bakar.</string>
+    <string name="pointer_label">TV Home – Telefon fare</string>
+    <string name="pointer_description">Telefonunu fare, klavye ve kumanda olarak kullanmanı sağlar. Telefon sayfası PIN ile korunur ve yalnızca senin ağından (veya Tailscale\'den) erişilir.</string>
+</resources>
