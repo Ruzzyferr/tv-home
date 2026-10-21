@@ -1,8 +1,123 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!-- English (default). Turkish lives in values-tr/strings.xml; keep both files in the same order. -->
 <resources>
     <string name="app_name">TV Home</string>
-    <string name="watcher_label">TV Home – Ana ekran yönlendirici</string>
-    <string name="watcher_description">Google TV\'nin kendi ana ekranı açıldığında TV Home\'u öne getirir. Ekran içeriğini okumaz, yalnızca hangi uygulamanın öne geldiğine bakar.</string>
-    <string name="pointer_label">TV Home – Telefon fare</string>
-    <string name="pointer_description">Telefonunu fare, klavye ve kumanda olarak kullanmanı sağlar. Telefon sayfası PIN ile korunur ve yalnızca senin ağından (veya Tailscale\'den) erişilir.</string>
+    <string name="watcher_label">TV Home – home screen redirect</string>
+    <string name="watcher_description">Brings TV Home to the front when the stock Google TV home screen opens. It does not read screen content; it only checks which app came to the front.</string>
+    <string name="pointer_label">TV Home – phone mouse</string>
+    <string name="pointer_description">Lets you use your phone as a mouse, keyboard and remote. The phone page is PIN-protected and only reachable from your network (or Tailscale).</string>
+
+    <!-- Categories -->
+    <string name="cat_video">Film &amp; Series</string>
+    <string name="cat_live">Live TV &amp; Sports</string>
+    <string name="cat_music">Music &amp; Radio</string>
+    <string name="cat_kids">Kids</string>
+    <string name="cat_games">Games</string>
+    <string name="cat_browsers">Browsers</string>
+    <string name="cat_social">Social &amp; Chat</string>
+    <string name="cat_news">News</string>
+    <string name="cat_tools">Tools</string>
+    <string name="cat_system">System</string>
+    <string name="cat_other">Other</string>
+
+    <!-- System shortcuts -->
+    <string name="qa_web">Internet</string>
+    <string name="qa_settings">Settings</string>
+    <string name="qa_wifi">Network</string>
+    <string name="qa_bluetooth">Bluetooth</string>
+    <string name="qa_display">Picture &amp; Sound</string>
+    <string name="qa_apps">Manage apps</string>
+    <string name="qa_accessibility">Accessibility</string>
+    <string name="qa_hidden">Hidden apps</string>
+
+    <!-- Status -->
+    <string name="net_none">No connection</string>
+    <string name="net_other">Network</string>
+    <string name="time_now">just now</string>
+    <string name="time_minutes">%d min ago</string>
+    <string name="time_hours">%d h ago</string>
+    <string name="time_yesterday">yesterday</string>
+    <string name="time_days">%d days ago</string>
+    <string name="time_weeks">%d weeks ago</string>
+
+    <!-- Inputs -->
+    <string name="source_broadcast">Broadcast</string>
+    <string name="source_input">Input</string>
+    <string name="source_connected">connected</string>
+    <string name="source_in_dock">in Dock</string>
+    <string name="episode_season">S%s</string>
+    <string name="episode_number">E%s</string>
+
+    <!-- Toasts -->
+    <string name="toast_no_browser">No browser installed – run .\\tv sideload brave or get TV Bro from the Play Store</string>
+    <string name="toast_browser_set">%1$s is now the Internet shortcut. For links: .\\tv browser %2$s</string>
+    <string name="toast_cant_open">Couldn\'t open it</string>
+    <string name="toast_cant_open_reason">Couldn\'t open it: %s</string>
+    <string name="toast_freed">%1$s freed · RAM %2$d%%</string>
+    <string name="toast_nothing_to_free">No background apps to close</string>
+
+    <!-- Long-press menus -->
+    <string name="menu_dock_add">☆  Add to Dock</string>
+    <string name="menu_dock_remove">★  Remove from Dock</string>
+    <string name="menu_dock_left">◀  Move left in Dock</string>
+    <string name="menu_dock_right">▶  Move right in Dock</string>
+    <string name="menu_category">▦  Change category</string>
+    <string name="menu_default_browser">🌐  Make default browser</string>
+    <string name="menu_show">👁  Show</string>
+    <string name="menu_hide">🙈  Hide</string>
+    <string name="menu_info">ⓘ  App info</string>
+    <string name="menu_uninstall">🗑  Uninstall</string>
+    <string name="menu_open">▶  Open</string>
+    <string name="menu_pick_category">Choose category</string>
+    <string name="menu_auto_category">✦  Automatic (%s)</string>
+
+    <!-- Overlays -->
+    <string name="lp_all">All</string>
+    <string name="sources_title">Inputs · hold OK: add to Dock</string>
+    <string name="sources_empty">This TV doesn\'t share its input list. Use the input button on the remote.</string>
+    <string name="cc_network">Network</string>
+    <string name="cc_bluetooth_detail">Remote, headphones</string>
+    <string name="cc_mouse">Phone mouse</string>
+    <string name="cc_mouse_off">Off</string>
+    <string name="cc_mouse_no_network">No network</string>
+    <string name="cc_mouse_hidden">On · address under Details</string>
+    <string name="cc_display">Picture &amp; Sound</string>
+    <string name="cc_display_detail">Mode, audio output</string>
+    <string name="cc_ram">RAM</string>
+    <string name="cc_storage">Storage</string>
+    <string name="cc_free_ram">Free RAM</string>
+    <string name="cc_details_on">Details: on</string>
+    <string name="cc_details_off">Details: off</string>
+    <string name="cc_all_settings">All settings</string>
+    <string name="cc_apps">Apps</string>
+    <string name="cc_volume">Volume</string>
+    <string name="cc_volume_hint">◀ ▶ adjust</string>
+    <!-- Shows the language the button switches TO, written in that language. -->
+    <string name="cc_language">Türkçe</string>
+    <string name="search_hint">Search apps, inputs or settings</string>
+    <string name="search_kind_favorite">Favorite</string>
+    <string name="search_kind_input">Input</string>
+    <string name="search_kind_setting">Setting</string>
+    <string name="search_no_results">No results for “%s”. Category words work too: sports, film, music.</string>
+
+    <!-- Dock tools -->
+    <string name="tool_launchpad">Launchpad</string>
+    <string name="tool_launchpad_sub">All apps, by category</string>
+    <string name="tool_sources">Inputs</string>
+    <string name="tool_sources_sub">Antenna, HDMI and other inputs</string>
+    <string name="tool_search">Search</string>
+    <string name="tool_search_sub">Apps, inputs or settings</string>
+    <string name="tool_control">Control Center</string>
+    <string name="tool_control_sub">Volume, network, phone mouse and system status</string>
+
+    <!-- Home -->
+    <string name="home_continue">Continue</string>
+    <string name="home_favorites">Favorites</string>
+    <string name="home_open">Open</string>
+    <string name="home_options">Options</string>
+    <string name="home_last_opened">Last opened: %s</string>
+    <string name="home_watched">%d%% watched</string>
+    <string name="home_input">Input · %s</string>
+    <string name="home_input_hint">OK to switch, hold OK for Dock options</string>
+    <string name="home_input_connected">Connected · </string>
 </resources>

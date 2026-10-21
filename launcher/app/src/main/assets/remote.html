@@ -75,7 +75,7 @@
 
 <div id="gate">
   <h1 style="letter-spacing:4px;font-size:15px">PIN</h1>
-  <p>TV Home ana ekranının sağ üstündeki 4 haneli PIN</p>
+  <p>TV Home → Kontrol Merkezi → Ayrıntılar'daki 4 haneli PIN</p>
   <input id="pin" inputmode="numeric" maxlength="4" autocomplete="one-time-code">
   <button id="pinGo" style="width:200px">BAĞLAN</button>
 </div>
@@ -83,6 +83,26 @@
 <script>
 (() => {
   const $ = id => document.getElementById(id);
+
+  // The page is written in Turkish; any other phone language gets English.
+  const EN = {
+    'TV Fare': 'TV Mouse', 'TV FARE': 'TV MOUSE', 'bağlanıyor…': 'connecting…', 'bağlı': 'connected', 'bağlantı yok': 'disconnected',
+    '1 parmak: imleç · dokun: tıkla · basılı tut: uzun bas · 2 parmak: kaydır · 2 parmakla dokun: geri':
+      '1 finger: pointer · tap: click · hold: long press · 2 fingers: scroll · 2-finger tap: back',
+    'GERİ': 'BACK', 'EV': 'HOME', 'YUKARI': 'UP', 'SON': 'RECENT', 'BİLDİRİM': 'ALERTS', 'OYNAT': 'PLAY', 'SOL': 'LEFT',
+    'SAĞ': 'RIGHT', 'SESSİZ': 'MUTE', 'GERİ SAR': 'REWIND', 'SES': 'VOL', 'AŞAĞI': 'DOWN', 'İLERİ SAR': 'FORWARD',
+    'HASSASİYET': 'SENSITIVITY', 'BAĞLAN': 'CONNECT',
+    "TV'ye yaz (önce TV'de alana tıkla)": 'Type on the TV (select a text field on the TV first)',
+    "TV Home → Kontrol Merkezi → Ayrıntılar'daki 4 haneli PIN": 'The 4-digit PIN under TV Home → Control Center → Details',
+  };
+  const turkish = (navigator.language || '').toLowerCase().startsWith('tr');
+  const t = s => (turkish ? s : EN[s] || s);
+  if (!turkish) {
+    document.documentElement.lang = 'en';
+    document.title = t(document.title);
+    document.querySelectorAll('h1, small, .hint, .lbl, #gate p, #pinGo, #state').forEach(el => { el.textContent = t(el.textContent.trim()); });
+    $('text').placeholder = t($('text').placeholder);
+  }
   const store = {
     get: k => { try { return localStorage.getItem(k); } catch { return null; } },
     set: (k, v) => { try { localStorage.setItem(k, v); } catch {} },
@@ -100,9 +120,9 @@
     const pin = store.get('pin');
     if (!pin) { $('gate').classList.add('show'); return; }
     ws = new WebSocket(`ws://${location.host}/ws?pin=${encodeURIComponent(pin)}`);
-    ws.onmessage = e => { if (e.data === 'ok') { retry = 0; setState(true, 'bağlı'); } };
+    ws.onmessage = e => { if (e.data === 'ok') { retry = 0; setState(true, t('bağlı')); } };
     ws.onclose = e => {
-      setState(false, 'bağlantı yok');
+      setState(false, t('bağlantı yok'));
       if (e.code === 1008) { store.set('pin', ''); $('gate').classList.add('show'); return; }
       setTimeout(connect, Math.min(4000, 300 * ++retry));
     };

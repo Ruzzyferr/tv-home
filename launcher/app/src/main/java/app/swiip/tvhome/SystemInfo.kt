@@ -20,10 +20,19 @@ data class SystemStats(
     val ramTotal: Long,
     val storageUsed: Long,
     val storageTotal: Long,
-    val network: String,
+    val network: NetworkKind,
     /** 0..4 bars for Wi-Fi, -1 when not on Wi-Fi. */
     val wifiBars: Int,
 ) {
+    enum class NetworkKind { NONE, WIFI, ETHERNET, OTHER }
+
+    fun networkName(context: Context): String = when (network) {
+        NetworkKind.WIFI -> "Wi-Fi"
+        NetworkKind.ETHERNET -> "Ethernet"
+        NetworkKind.NONE -> context.getString(R.string.net_none)
+        NetworkKind.OTHER -> context.getString(R.string.net_other)
+    }
+
     val ramPercent get() = if (ramTotal == 0L) 0 else (ramUsed * 100 / ramTotal).toInt()
     val storagePercent get() = if (storageTotal == 0L) 0 else (storageUsed * 100 / storageTotal).toInt()
 
@@ -42,14 +51,14 @@ data class SystemStats(
             )
         }
 
-        private fun network(context: Context): Pair<String, Int> {
+        private fun network(context: Context): Pair<NetworkKind, Int> {
             val cm = context.getSystemService(ConnectivityManager::class.java)
-            val caps = cm.getNetworkCapabilities(cm.activeNetwork) ?: return "Bağlantı yok" to -1
+            val caps = cm.getNetworkCapabilities(cm.activeNetwork) ?: return NetworkKind.NONE to -1
             return when {
-                caps.hasTransport(NetworkCapabilities.TRANSPORT_ETHERNET) -> "Ethernet" to -1
+                caps.hasTransport(NetworkCapabilities.TRANSPORT_ETHERNET) -> NetworkKind.ETHERNET to -1
                 caps.hasTransport(NetworkCapabilities.TRANSPORT_WIFI) -> {
                     val dbm = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) caps.signalStrength else -60
-                    "Wi-Fi" to when {
+                    NetworkKind.WIFI to when {
                         dbm > -55 -> 4
                         dbm > -66 -> 3
                         dbm > -77 -> 2
@@ -57,7 +66,7 @@ data class SystemStats(
                         else -> 0
                     }
                 }
-                else -> "Ağ" to -1
+                else -> NetworkKind.OTHER to -1
             }
         }
     }
@@ -132,15 +141,15 @@ object Usage {
         stats.appBytes + stats.dataBytes + stats.cacheBytes
     }.getOrNull()
 
-    fun relative(time: Long, now: Long = System.currentTimeMillis()): String {
+    fun relative(context: Context, time: Long, now: Long = System.currentTimeMillis()): String {
         val minutes = (now - time) / 60_000
         return when {
-            minutes < 2 -> "az önce"
-            minutes < 60 -> "$minutes dk önce"
-            minutes < 24 * 60 -> "${minutes / 60} sa önce"
-            minutes < 48 * 60 -> "dün"
-            minutes < 14 * 24 * 60 -> "${minutes / (24 * 60)} gün önce"
-            else -> "${minutes / (7 * 24 * 60)} hafta önce"
+            minutes < 2 -> context.getString(R.string.time_now)
+            minutes < 60 -> context.getString(R.string.time_minutes, minutes.toInt())
+            minutes < 24 * 60 -> context.getString(R.string.time_hours, (minutes / 60).toInt())
+            minutes < 48 * 60 -> context.getString(R.string.time_yesterday)
+            minutes < 14 * 24 * 60 -> context.getString(R.string.time_days, (minutes / (24 * 60)).toInt())
+            else -> context.getString(R.string.time_weeks, (minutes / (7 * 24 * 60)).toInt())
         }
     }
 

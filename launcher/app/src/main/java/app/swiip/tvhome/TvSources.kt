@@ -33,7 +33,7 @@ object TvSources {
                 TvSource(
                     id = info.id,
                     label = info.loadLabel(context).toString(),
-                    detail = port ?: typeName(info),
+                    detail = port ?: typeName(context, info),
                     isPassthrough = info.isPassthroughInput,
                     // This TV reports empty HDMI ports as "standby", so only a named CEC device or a fully
                     // connected input counts as plugged in.
@@ -45,11 +45,11 @@ object TvSources {
             .sortedByDescending { it.connected && it.isPassthrough }
     }
 
-    private fun typeName(info: TvInputInfo): String = when (info.type) {
+    private fun typeName(context: Context, info: TvInputInfo): String = when (info.type) {
         TvInputInfo.TYPE_HDMI -> "HDMI"
-        TvInputInfo.TYPE_TUNER -> "Yayın"
+        TvInputInfo.TYPE_TUNER -> context.getString(R.string.source_broadcast)
         TvInputInfo.TYPE_COMPOSITE, TvInputInfo.TYPE_COMPONENT -> "AV"
-        else -> "Giriş"
+        else -> context.getString(R.string.source_input)
     }
 
     fun intentFor(context: Context, source: TvSource): Intent {

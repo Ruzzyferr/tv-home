@@ -18,7 +18,7 @@ import java.net.URL
 @Immutable
 data class WatchItem(
     val title: String,
-    /** "S2 · B5 · Bölüm adı" for episodes, null for films and videos. */
+    /** "S2 · E5 · Episode title" for episodes, null for films and videos. */
     val subtitle: String?,
     val packageName: String,
     val intent: Intent?,
@@ -61,8 +61,8 @@ object WatchNext {
                 val season = c.getString(2)
                 val episode = c.getString(3)
                 val subtitle = listOfNotNull(
-                    season?.let { "S$it" },
-                    episode?.let { "B$it" },
+                    season?.let { context.getString(R.string.episode_season, it) },
+                    episode?.let { context.getString(R.string.episode_number, it) },
                     c.getString(1)?.takeIf { it.isNotBlank() },
                 ).joinToString(" · ").ifBlank { null }
                 val position = c.getLong(8)

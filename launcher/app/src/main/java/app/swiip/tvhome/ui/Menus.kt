@@ -27,6 +27,8 @@ import androidx.tv.material3.DenseListItem
 import androidx.tv.material3.Text
 import app.swiip.tvhome.AppCategory
 import app.swiip.tvhome.HomePrefs
+import androidx.compose.ui.res.stringResource
+import app.swiip.tvhome.R
 import app.swiip.tvhome.TvApp
 import app.swiip.tvhome.TvSource
 
@@ -38,20 +40,20 @@ fun AppMenu(app: TvApp, prefs: HomePrefs, actions: HomeActions, onPickCategory: 
     val pkg = app.packageName
     val isFavorite = pkg in prefs.favorites
     val entries = buildList {
-        add(MenuEntry(if (isFavorite) "★  Dock'tan çıkar" else "☆  Dock'a ekle") { prefs.toggleFavorite(pkg) })
+        add(MenuEntry(stringResource(if (isFavorite) R.string.menu_dock_remove else R.string.menu_dock_add)) { prefs.toggleFavorite(pkg) })
         if (isFavorite) {
-            add(MenuEntry("◀  Dock'ta sola taşı", keepOpen = true) { prefs.moveFavorite(pkg, -1) })
-            add(MenuEntry("▶  Dock'ta sağa taşı", keepOpen = true) { prefs.moveFavorite(pkg, +1) })
+            add(MenuEntry(stringResource(R.string.menu_dock_left), keepOpen = true) { prefs.moveFavorite(pkg, -1) })
+            add(MenuEntry(stringResource(R.string.menu_dock_right), keepOpen = true) { prefs.moveFavorite(pkg, +1) })
         }
-        add(MenuEntry("▦  Kategori değiştir", run = onPickCategory))
+        add(MenuEntry(stringResource(R.string.menu_category), run = onPickCategory))
         if (app.isBrowser && prefs.browser != pkg) {
-            add(MenuEntry("🌐  Varsayılan tarayıcı yap") { actions.makeDefaultBrowser(app) })
+            add(MenuEntry(stringResource(R.string.menu_default_browser)) { actions.makeDefaultBrowser(app) })
         }
-        add(MenuEntry(if (pkg in prefs.hidden) "👁  Göster" else "🙈  Gizle") { prefs.toggleHidden(pkg) })
-        add(MenuEntry("ⓘ  Uygulama bilgisi") { actions.appInfo(app) })
-        add(MenuEntry("🗑  Kaldır") { actions.uninstall(app) })
+        add(MenuEntry(stringResource(if (pkg in prefs.hidden) R.string.menu_show else R.string.menu_hide)) { prefs.toggleHidden(pkg) })
+        add(MenuEntry(stringResource(R.string.menu_info)) { actions.appInfo(app) })
+        add(MenuEntry(stringResource(R.string.menu_uninstall)) { actions.uninstall(app) })
     }
-    MenuDialog(app.label, prefs.categoryOf(app).title, entries, onDismiss)
+    MenuDialog(app.label, stringResource(prefs.categoryOf(app).titleRes), entries, onDismiss)
 }
 
 /** Long-press on a TV input (Kaynaklar or the Dock): pin it to the Dock for one-press switching, or reorder it. */
@@ -60,11 +62,11 @@ fun SourceMenu(source: TvSource, prefs: HomePrefs, actions: HomeActions, onDismi
     val id = HomePrefs.sourceId(source.id)
     val pinned = id in prefs.favorites
     val entries = buildList {
-        add(MenuEntry("▶  Aç") { actions.openSource(source) })
-        add(MenuEntry(if (pinned) "★  Dock'tan çıkar" else "☆  Dock'a ekle") { prefs.toggleFavorite(id) })
+        add(MenuEntry(stringResource(R.string.menu_open)) { actions.openSource(source) })
+        add(MenuEntry(stringResource(if (pinned) R.string.menu_dock_remove else R.string.menu_dock_add)) { prefs.toggleFavorite(id) })
         if (pinned) {
-            add(MenuEntry("◀  Dock'ta sola taşı", keepOpen = true) { prefs.moveFavorite(id, -1) })
-            add(MenuEntry("▶  Dock'ta sağa taşı", keepOpen = true) { prefs.moveFavorite(id, +1) })
+            add(MenuEntry(stringResource(R.string.menu_dock_left), keepOpen = true) { prefs.moveFavorite(id, -1) })
+            add(MenuEntry(stringResource(R.string.menu_dock_right), keepOpen = true) { prefs.moveFavorite(id, +1) })
         }
     }
     MenuDialog(source.label, source.detail, entries, onDismiss)
@@ -73,13 +75,14 @@ fun SourceMenu(source: TvSource, prefs: HomePrefs, actions: HomeActions, onDismi
 @Composable
 fun CategoryPicker(app: TvApp, prefs: HomePrefs, onDismiss: () -> Unit) {
     val current = prefs.categoryOf(app)
-    val entries = listOf(MenuEntry("✦  Otomatik (${app.autoCategory.title})") { prefs.setCategory(app.packageName, null) }) +
+    val auto = stringResource(R.string.menu_auto_category, stringResource(app.autoCategory.titleRes))
+    val entries = listOf(MenuEntry(auto) { prefs.setCategory(app.packageName, null) }) +
         AppCategory.entries.map { category ->
-            MenuEntry((if (category == current) "●  " else "○  ") + category.title) {
+            MenuEntry((if (category == current) "●  " else "○  ") + stringResource(category.titleRes)) {
                 prefs.setCategory(app.packageName, category)
             }
         }
-    MenuDialog("Kategori seç", app.label, entries, onDismiss)
+    MenuDialog(stringResource(R.string.menu_pick_category), app.label, entries, onDismiss)
 }
 
 @Composable

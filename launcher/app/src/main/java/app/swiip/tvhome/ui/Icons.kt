@@ -46,6 +46,12 @@ object Glyphs {
     val Home = icon("home") { moveTo(3.5f, 11f); lineTo(12f, 4f); lineTo(20.5f, 11f); moveTo(6f, 9.5f); lineTo(6f, 20f); lineTo(18f, 20f); lineTo(18f, 9.5f) }
     val Play = icon("play") { moveTo(8f, 5.5f); lineTo(18.5f, 12f); lineTo(8f, 18.5f); close() }
     val More = icon("more") { circle(6f, 12f, 1.2f); circle(12f, 12f, 1.2f); circle(18f, 12f, 1.2f) }
+    val Globe = icon("globe") {
+        circle(12f, 12f, 8.5f)
+        moveTo(3.5f, 12f); lineTo(20.5f, 12f)
+        moveTo(12f, 3.5f); curveTo(9f, 7f, 9f, 17f, 12f, 20.5f)
+        moveTo(12f, 3.5f); curveTo(15f, 7f, 15f, 17f, 12f, 20.5f)
+    }
     val Eye = icon("eye") { moveTo(2.5f, 12f); curveTo(6f, 5.5f, 18f, 5.5f, 21.5f, 12f); curveTo(18f, 18.5f, 6f, 18.5f, 2.5f, 12f); close(); circle(12f, 12f, 3f) }
 
     private fun icon(name: String, block: PathBuilder.() -> Unit): ImageVector =

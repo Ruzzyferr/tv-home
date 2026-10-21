@@ -5,20 +5,21 @@ import android.content.Intent
 import android.content.pm.ApplicationInfo
 import android.content.pm.PackageManager
 import android.net.Uri
+import androidx.annotation.StringRes
 
 /** Rows on the home screen, in display order. A row only appears when it has at least one app. */
-enum class AppCategory(val title: String) {
-    VIDEO("Film & Dizi"),
-    LIVE("Canlı TV & Spor"),
-    MUSIC("Müzik & Radyo"),
-    KIDS("Çocuk"),
-    GAMES("Oyunlar"),
-    BROWSERS("Tarayıcılar"),
-    SOCIAL("Sosyal & İletişim"),
-    NEWS("Haberler"),
-    TOOLS("Araçlar"),
-    SYSTEM("Sistem"),
-    OTHER("Diğer"),
+enum class AppCategory(@StringRes val titleRes: Int) {
+    VIDEO(R.string.cat_video),
+    LIVE(R.string.cat_live),
+    MUSIC(R.string.cat_music),
+    KIDS(R.string.cat_kids),
+    GAMES(R.string.cat_games),
+    BROWSERS(R.string.cat_browsers),
+    SOCIAL(R.string.cat_social),
+    NEWS(R.string.cat_news),
+    TOOLS(R.string.cat_tools),
+    SYSTEM(R.string.cat_system),
+    OTHER(R.string.cat_other),
 }
 
 /**

@@ -63,7 +63,10 @@ import androidx.tv.material3.ClickableSurfaceDefaults
 import androidx.tv.material3.Icon
 import androidx.tv.material3.Surface
 import androidx.tv.material3.Text
+import androidx.compose.ui.res.stringResource
 import app.swiip.tvhome.AppCategory
+import app.swiip.tvhome.AppLanguage
+import app.swiip.tvhome.R
 import app.swiip.tvhome.HomePrefs
 import app.swiip.tvhome.QuickAction
 import app.swiip.tvhome.SystemStats
@@ -118,11 +121,11 @@ fun Launchpad(apps: List<TvApp>, prefs: HomePrefs, onOpen: (TvApp) -> Unit, onMe
                 horizontalArrangement = Arrangement.spacedBy(8.dp),
             ) {
                 item {
-                    PillButton("Tümü", onClick = { runCatching { firstTile.requestFocus() } }, selected = category == null, trailing = "${visible.size}",
+                    PillButton(stringResource(R.string.lp_all), onClick = { runCatching { firstTile.requestFocus() } }, selected = category == null, trailing = "${visible.size}",
                         modifier = Modifier.onFocusChanged { if (it.isFocused) category = null })
                 }
                 items(categories) { c ->
-                    PillButton(c.title, onClick = { runCatching { firstTile.requestFocus() } }, selected = category == c,
+                    PillButton(stringResource(c.titleRes), onClick = { runCatching { firstTile.requestFocus() } }, selected = category == c,
                         trailing = "${visible.count { prefs.categoryOf(it) == c }}",
                         modifier = Modifier.onFocusChanged { if (it.isFocused) category = c })
                 }
@@ -167,10 +170,12 @@ fun SourcesPanel(sources: List<TvSource>, prefs: HomePrefs, onOpen: (TvSource) -
                 .glass(RoundedCornerShape(24.dp), Neon.Panel)
                 .padding(10.dp)
         ) {
-            PanelTitle("Kaynaklar · basılı tut: Dock'a ekle")
+            PanelTitle(stringResource(R.string.sources_title))
             if (sources.isEmpty()) {
-                Text("Bu TV giriş listesi paylaşmıyor. Kumandadaki kaynak tuşunu kullan.", fontSize = 13.sp, color = Neon.Dim, modifier = Modifier.padding(8.dp))
+                Text(stringResource(R.string.sources_empty), fontSize = 13.sp, color = Neon.Dim, modifier = Modifier.padding(8.dp))
             }
+            val connectedText = stringResource(R.string.source_connected)
+            val inDockText = stringResource(R.string.source_in_dock)
             sources.forEachIndexed { i, source ->
                 val icon = when {
                     source.isPassthrough -> Glyphs.Input
@@ -181,7 +186,7 @@ fun SourcesPanel(sources: List<TvSource>, prefs: HomePrefs, onOpen: (TvSource) -
                 PanelRow(
                     icon = icon,
                     title = source.label,
-                    detail = listOfNotNull(source.detail, "bağlı".takeIf { source.isPassthrough && source.connected }, "Dock'ta".takeIf { inDock }).joinToString(" · "),
+                    detail = listOfNotNull(source.detail, connectedText.takeIf { source.isPassthrough && source.connected }, inDockText.takeIf { inDock }).joinToString(" · "),
                     detailColor = if (source.isPassthrough && source.connected) Neon.Ok else Neon.Dim,
                     onClick = { onDismiss(); onOpen(source) },
                     onLongClick = { onMenu(source) },
@@ -215,21 +220,25 @@ fun ControlCenter(stats: SystemStats?, remote: RemoteHint?, prefs: HomePrefs, ac
                 .padding(14.dp),
             verticalArrangement = Arrangement.spacedBy(10.dp),
         ) {
+            val context = LocalContext.current
             Row(horizontalArrangement = Arrangement.spacedBy(10.dp)) {
-                ControlTile(if (stats?.network == "Ethernet") Glyphs.Ethernet else Glyphs.Wifi, "Ağ", stats?.network ?: "—", { open(QuickAction.WIFI) },
-                    Modifier.weight(1f).focusRequester(first))
-                ControlTile(Glyphs.Bluetooth, "Bluetooth", "Kumanda, kulaklık", { open(QuickAction.BLUETOOTH) }, Modifier.weight(1f))
+                ControlTile(
+                    if (stats?.network == SystemStats.NetworkKind.ETHERNET) Glyphs.Ethernet else Glyphs.Wifi,
+                    stringResource(R.string.cc_network), stats?.networkName(context) ?: "—", { open(QuickAction.WIFI) },
+                    Modifier.weight(1f).focusRequester(first),
+                )
+                ControlTile(Glyphs.Bluetooth, "Bluetooth", stringResource(R.string.cc_bluetooth_detail), { open(QuickAction.BLUETOOTH) }, Modifier.weight(1f))
             }
             Row(horizontalArrangement = Arrangement.spacedBy(10.dp)) {
                 // Address and PIN only in the detailed view: guests in the room should not be able to read them off the screen.
                 val mouse = when {
-                    remote == null || !remote.enabled -> "Kapalı"
-                    remote.url == null -> "Ağ yok"
-                    !prefs.detailed -> "Açık · adres için Ayrıntılar"
+                    remote == null || !remote.enabled -> stringResource(R.string.cc_mouse_off)
+                    remote.url == null -> stringResource(R.string.cc_mouse_no_network)
+                    !prefs.detailed -> stringResource(R.string.cc_mouse_hidden)
                     else -> "${remote.url.removePrefix("http://")}\nPIN ${remote.pin}"
                 }
-                ControlTile(Glyphs.Phone, "Telefon fare", mouse, { }, Modifier.weight(1f))
-                ControlTile(Glyphs.Picture, "Görüntü & Ses", "Mod, ses çıkışı", { open(QuickAction.DISPLAY) }, Modifier.weight(1f))
+                ControlTile(Glyphs.Phone, stringResource(R.string.cc_mouse), mouse, { }, Modifier.weight(1f))
+                ControlTile(Glyphs.Picture, stringResource(R.string.cc_display), stringResource(R.string.cc_display_detail), { open(QuickAction.DISPLAY) }, Modifier.weight(1f))
             }
             VolumeSlider()
             if (stats != null) {
@@ -240,17 +249,19 @@ fun ControlCenter(stats: SystemStats?, remote: RemoteHint?, prefs: HomePrefs, ac
                         .padding(14.dp),
                     verticalArrangement = Arrangement.spacedBy(8.dp),
                 ) {
-                    StatLine("RAM", stats.ramPercent, "${formatBytes(stats.ramUsed)} / ${formatBytes(stats.ramTotal)}")
-                    StatLine("Depolama", stats.storagePercent, "${formatBytes(stats.storageUsed)} / ${formatBytes(stats.storageTotal)}")
+                    StatLine(stringResource(R.string.cc_ram), stats.ramPercent, "${formatBytes(stats.ramUsed)} / ${formatBytes(stats.ramTotal)}")
+                    StatLine(stringResource(R.string.cc_storage), stats.storagePercent, "${formatBytes(stats.storageUsed)} / ${formatBytes(stats.storageTotal)}")
                 }
             }
             Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                PillButton("RAM'i boşalt", actions::freeMemory, icon = Glyphs.Sliders)
-                PillButton(if (prefs.detailed) "Ayrıntılar: açık" else "Ayrıntılar: kapalı", prefs::toggleDetailed, icon = Glyphs.Eye, selected = prefs.detailed)
+                PillButton(stringResource(R.string.cc_free_ram), actions::freeMemory, icon = Glyphs.Sliders)
+                PillButton(stringResource(if (prefs.detailed) R.string.cc_details_on else R.string.cc_details_off), prefs::toggleDetailed, icon = Glyphs.Eye, selected = prefs.detailed)
             }
             Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                PillButton("Tüm ayarlar", { open(QuickAction.SETTINGS) }, icon = Glyphs.Gear)
-                PillButton("Uygulamalar", { open(QuickAction.APPS) }, icon = Glyphs.Grid)
+                PillButton(stringResource(R.string.cc_all_settings), { open(QuickAction.SETTINGS) }, icon = Glyphs.Gear)
+                PillButton(stringResource(R.string.cc_apps), { open(QuickAction.APPS) }, icon = Glyphs.Grid)
+                // Shows the language it switches to, in that language ("English" / "Türkçe").
+                if (AppLanguage.isSupported()) PillButton(stringResource(R.string.cc_language), actions::toggleLanguage, icon = Glyphs.Globe)
             }
         }
         FocusOnOpen(first)
@@ -315,8 +326,8 @@ private fun VolumeSlider() {
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Icon(Glyphs.Volume, null, tint = Neon.Ink, modifier = Modifier.size(18.dp))
                 Spacer(Modifier.width(10.dp))
-                Text("Ses", fontSize = 13.sp, fontWeight = FontWeight.SemiBold, modifier = Modifier.weight(1f))
-                Text(if (focused) "◀ ▶ ayarla   $volume" else "$volume", fontSize = 11.sp, color = Neon.Dim)
+                Text(stringResource(R.string.cc_volume), fontSize = 13.sp, fontWeight = FontWeight.SemiBold, modifier = Modifier.weight(1f))
+                Text(if (focused) stringResource(R.string.cc_volume_hint) + "   $volume" else "$volume", fontSize = 11.sp, color = Neon.Dim)
             }
             Box(
                 Modifier
@@ -380,16 +391,21 @@ fun Spotlight(
         val field = remember { FocusRequester() }
         val keyboard = LocalSoftwareKeyboardController.current
         val q = norm(query.trim())
+        val context = LocalContext.current
+        val kindFavorite = stringResource(R.string.search_kind_favorite)
+        val kindInput = stringResource(R.string.search_kind_input)
+        val kindSetting = stringResource(R.string.search_kind_setting)
+        val title = { c: AppCategory -> context.getString(c.titleRes) }
         val hits = if (q.isEmpty()) {
-            suggestions.map { Hit(it.label, "Favori", it, null) { actions.openApp(it) } }
+            suggestions.map { Hit(it.label, kindFavorite, it, null) { actions.openApp(it) } }
         } else {
-            // Category names match too: "spor" finds every live/sports app.
-            apps.filter { it.packageName !in prefs.hidden && (q in norm(it.label) || q in norm(prefs.categoryOf(it).title)) }
-                .map { Hit(it.label, prefs.categoryOf(it).title, it, null) { actions.openApp(it) } } +
-                sources.filter { q in norm(it.label) || q in "kaynak giris hdmi" }
-                    .map { Hit(it.label, "Kaynak", null, if (it.isPassthrough) Glyphs.Input else Glyphs.Tv) { actions.openSource(it) } } +
-                QuickAction.entries.filter { it.intent != null && q in norm(it.label + " ayar") }
-                    .map { Hit(it.label, "Ayar", null, Glyphs.Gear) { actions.openQuick(it) } }
+            // Category names match too: "spor" / "sports" finds every live/sports app.
+            apps.filter { it.packageName !in prefs.hidden && (q in norm(it.label) || q in norm(title(prefs.categoryOf(it)))) }
+                .map { Hit(it.label, title(prefs.categoryOf(it)), it, null) { actions.openApp(it) } } +
+                sources.filter { q in norm(it.label) || q in norm("$kindInput kaynak giris input hdmi") }
+                    .map { Hit(it.label, kindInput, null, if (it.isPassthrough) Glyphs.Input else Glyphs.Tv) { actions.openSource(it) } } +
+                QuickAction.entries.filter { it.intent != null && q in norm(context.getString(it.labelRes) + " $kindSetting") }
+                    .map { Hit(context.getString(it.labelRes), kindSetting, null, Glyphs.Gear) { actions.openQuick(it) } }
         }.take(7)
 
         Column(
@@ -413,7 +429,7 @@ fun Spotlight(
                     modifier = Modifier.weight(1f).focusRequester(field),
                     decorationBox = { inner ->
                         Box {
-                            if (query.isEmpty()) Text("Uygulama, kaynak veya ayar ara", fontFamily = Sora, fontWeight = FontWeight.Light, fontSize = 26.sp, color = Color(0xFF5D6886))
+                            if (query.isEmpty()) Text(stringResource(R.string.search_hint), fontFamily = Sora, fontWeight = FontWeight.Light, fontSize = 26.sp, color = Color(0xFF5D6886))
                             inner()
                         }
                     },
@@ -422,7 +438,7 @@ fun Spotlight(
             Box(Modifier.fillMaxWidth().height(1.dp).background(Neon.Line))
             Column(Modifier.padding(8.dp)) {
                 if (hits.isEmpty()) {
-                    Text("“$query” için sonuç yok. Kategori de yazabilirsin: spor, film, müzik.", fontSize = 13.sp, color = Neon.Dim, modifier = Modifier.padding(14.dp))
+                    Text(stringResource(R.string.search_no_results, query), fontSize = 13.sp, color = Neon.Dim, modifier = Modifier.padding(14.dp))
                 }
                 hits.forEach { hit ->
                     HitRow(hit) {

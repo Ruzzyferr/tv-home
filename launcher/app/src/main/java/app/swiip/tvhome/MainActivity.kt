@@ -132,7 +132,7 @@ class MainActivity : ComponentActivity(), HomeActions {
 
     override fun openWeb() {
         val browser = apps.firstOrNull { it.packageName == prefs.browser } ?: apps.firstOrNull { it.isBrowser }
-        if (browser != null) launch(browser.launchIntent) else toast("Tarayıcı yok – .\\tv sideload brave veya Play Store'dan TV Bro")
+        if (browser != null) launch(browser.launchIntent) else toast(getString(R.string.toast_no_browser))
     }
 
     override fun appInfo(app: TvApp) =
@@ -143,7 +143,7 @@ class MainActivity : ComponentActivity(), HomeActions {
 
     override fun makeDefaultBrowser(app: TvApp) {
         prefs.chooseBrowser(app.packageName)
-        toast("${app.label} artık İnternet kısayolu. Linkler için: .\\tv browser ${app.packageName}")
+        toast(getString(R.string.toast_browser_set, app.label, app.packageName))
     }
 
     /** Resumes the exact episode/video through the app's own deep link; falls back to opening the app. */
@@ -156,14 +156,19 @@ class MainActivity : ComponentActivity(), HomeActions {
             } catch (_: Exception) {
             }
         }
-        apps.firstOrNull { it.packageName == item.packageName }?.let(::openApp) ?: toast("Açılamadı")
+        apps.firstOrNull { it.packageName == item.packageName }?.let(::openApp) ?: toast(getString(R.string.toast_cant_open))
     }
+
+    override fun toggleLanguage() = AppLanguage.toggle(this)
 
     override fun freeMemory() {
         lifecycleScope.launch {
             val freed = withContext(Dispatchers.IO) { MemoryCleaner.free(this@MainActivity, apps.map { it.packageName }) }
             stats = withContext(Dispatchers.IO) { SystemStats.read(this@MainActivity) }
-            toast(if (freed > 0) "${formatBytes(freed)} boşaldı · RAM %${stats?.ramPercent}" else "Arka planda kapatılacak uygulama yoktu")
+            toast(
+                if (freed > 0) getString(R.string.toast_freed, formatBytes(freed), stats?.ramPercent ?: 0)
+                else getString(R.string.toast_nothing_to_free)
+            )
         }
     }
 
@@ -171,7 +176,7 @@ class MainActivity : ComponentActivity(), HomeActions {
         try {
             startActivity(intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK))
         } catch (e: Exception) {
-            toast("Açılamadı: ${e.javaClass.simpleName}")
+            toast(getString(R.string.toast_cant_open_reason, e.javaClass.simpleName))
         }
     }
 

@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Turkish. Keep the same keys and order as values/strings.xml. -->
+<resources>
+    <string name="app_name">TV Home</string>
+    <string name="watcher_label">TV Home – Ana ekran yönlendirici</string>
+    <string name="watcher_description">Google TV\'nin kendi ana ekranı açıldığında TV Home\'u öne getirir. Ekran içeriğini okumaz, yalnızca hangi uygulamanın öne geldiğine bakar.</string>
+    <string name="pointer_label">TV Home – Telefon fare</string>
+    <string name="pointer_description">Telefonunu fare, klavye ve kumanda olarak kullanmanı sağlar. Telefon sayfası PIN ile korunur ve yalnızca senin ağından (veya Tailscale\'den) erişilir.</string>
+
+    <string name="cat_video">Film &amp; Dizi</string>
+    <string name="cat_live">Canlı TV &amp; Spor</string>
+    <string name="cat_music">Müzik &amp; Radyo</string>
+    <string name="cat_kids">Çocuk</string>
+    <string name="cat_games">Oyunlar</string>
+    <string name="cat_browsers">Tarayıcılar</string>
+    <string name="cat_social">Sosyal &amp; İletişim</string>
+    <string name="cat_news">Haberler</string>
+    <string name="cat_tools">Araçlar</string>
+    <string name="cat_system">Sistem</string>
+    <string name="cat_other">Diğer</string>
+
+    <string name="qa_web">İnternet</string>
+    <string name="qa_settings">Ayarlar</string>
+    <string name="qa_wifi">Ağ</string>
+    <string name="qa_bluetooth">Bluetooth</string>
+    <string name="qa_display">Görüntü &amp; Ses</string>
+    <string name="qa_apps">Uygulama yönetimi</string>
+    <string name="qa_accessibility">Erişilebilirlik</string>
+    <string name="qa_hidden">Gizli uygulamalar</string>
+
+    <string name="net_none">Bağlantı yok</string>
+    <string name="net_other">Ağ</string>
+    <string name="time_now">az önce</string>
+    <string name="time_minutes">%d dk önce</string>
+    <string name="time_hours">%d sa önce</string>
+    <string name="time_yesterday">dün</string>
+    <string name="time_days">%d gün önce</string>
+    <string name="time_weeks">%d hafta önce</string>
+
+    <string name="source_broadcast">Yayın</string>
+    <string name="source_input">Giriş</string>
+    <string name="source_connected">bağlı</string>
+    <string name="source_in_dock">Dock\'ta</string>
+    <string name="episode_season">S%s</string>
+    <string name="episode_number">B%s</string>
+
+    <string name="toast_no_browser">Tarayıcı yok – .\\tv sideload brave veya Play Store\'dan TV Bro</string>
+    <string name="toast_browser_set">%1$s artık İnternet kısayolu. Linkler için: .\\tv browser %2$s</string>
+    <string name="toast_cant_open">Açılamadı</string>
+    <string name="toast_cant_open_reason">Açılamadı: %s</string>
+    <string name="toast_freed">%1$s boşaldı · RAM %%%2$d</string>
+    <string name="toast_nothing_to_free">Arka planda kapatılacak uygulama yoktu</string>
+
+    <string name="menu_dock_add">☆  Dock\'a ekle</string>
+    <string name="menu_dock_remove">★  Dock\'tan çıkar</string>
+    <string name="menu_dock_left">◀  Dock\'ta sola taşı</string>
+    <string name="menu_dock_right">▶  Dock\'ta sağa taşı</string>
+    <string name="menu_category">▦  Kategori değiştir</string>
+    <string name="menu_default_browser">🌐  Varsayılan tarayıcı yap</string>
+    <string name="menu_show">👁  Göster</string>
+    <string name="menu_hide">🙈  Gizle</string>
+    <string name="menu_info">ⓘ  Uygulama bilgisi</string>
+    <string name="menu_uninstall">🗑  Kaldır</string>
+    <string name="menu_open">▶  Aç</string>
+    <string name="menu_pick_category">Kategori seç</string>
+    <string name="menu_auto_category">✦  Otomatik (%s)</string>
+
+    <string name="lp_all">Tümü</string>
+    <string name="sources_title">Kaynaklar · basılı tut: Dock\'a ekle</string>
+    <string name="sources_empty">Bu TV giriş listesi paylaşmıyor. Kumandadaki kaynak tuşunu kullan.</string>
+    <string name="cc_network">Ağ</string>
+    <string name="cc_bluetooth_detail">Kumanda, kulaklık</string>
+    <string name="cc_mouse">Telefon fare</string>
+    <string name="cc_mouse_off">Kapalı</string>
+    <string name="cc_mouse_no_network">Ağ yok</string>
+    <string name="cc_mouse_hidden">Açık · adres için Ayrıntılar</string>
+    <string name="cc_display">Görüntü &amp; Ses</string>
+    <string name="cc_display_detail">Mod, ses çıkışı</string>
+    <string name="cc_ram">RAM</string>
+    <string name="cc_storage">Depolama</string>
+    <string name="cc_free_ram">RAM\'i boşalt</string>
+    <string name="cc_details_on">Ayrıntılar: açık</string>
+    <string name="cc_details_off">Ayrıntılar: kapalı</string>
+    <string name="cc_all_settings">Tüm ayarlar</string>
+    <string name="cc_apps">Uygulamalar</string>
+    <string name="cc_volume">Ses</string>
+    <string name="cc_volume_hint">◀ ▶ ayarla</string>
+    <string name="cc_language">English</string>
+    <string name="search_hint">Uygulama, kaynak veya ayar ara</string>
+    <string name="search_kind_favorite">Favori</string>
+    <string name="search_kind_input">Kaynak</string>
+    <string name="search_kind_setting">Ayar</string>
+    <string name="search_no_results">“%s” için sonuç yok. Kategori de yazabilirsin: spor, film, müzik.</string>
+
+    <string name="tool_launchpad">Launchpad</string>
+    <string name="tool_launchpad_sub">Tüm uygulamalar, kategorilere göre</string>
+    <string name="tool_sources">Kaynaklar</string>
+    <string name="tool_sources_sub">Anten, HDMI ve diğer girişler</string>
+    <string name="tool_search">Ara</string>
+    <string name="tool_search_sub">Uygulama, kaynak veya ayar</string>
+    <string name="tool_control">Kontrol Merkezi</string>
+    <string name="tool_control_sub">Ses, ağ, telefon fare ve sistem durumu</string>
+
+    <string name="home_continue">Devam et</string>
+    <string name="home_favorites">Favoriler</string>
+    <string name="home_open">Aç</string>
+    <string name="home_options">Seçenekler</string>
+    <string name="home_last_opened">Son açılış: %s</string>
+    <string name="home_watched">%%%d izlendi</string>
+    <string name="home_input">Kaynak · %s</string>
+    <string name="home_input_hint">OK ile geç, basılı tut: Dock ayarları</string>
+    <string name="home_input_connected">Bağlı · </string>
+</resources>

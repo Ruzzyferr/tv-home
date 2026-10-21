@@ -17,7 +17,7 @@ Built for and tested on a 2024 **Grundig Nano QLED (Google TV, Android 14, Media
 | **Automatic categories** | Launchpad sorts every app into Film & Series, Live TV & Sport, Music, Games, Browsers, Tools… A new kind of app gets its own category the moment it is installed. |
 | **Inputs by name** | HDMI-CEC devices show up by name with their brand badge (PlayStation, Xbox, Switch, Apple TV, Fire TV, Chromecast, Shield, Roku). Pin the PS5 to the Dock and switch to it in one press. |
 | **Spotlight search** | Type or speak; `spor` finds every sports app, `hdmi` every input, and settings come up too. |
-| **Control Center** | Network, Bluetooth, volume slider, live RAM and storage, **Free RAM** button, and a switch between a clean *simple* view and a *detailed*, Windows-style view. |
+| **Control Center** | Network, Bluetooth, volume slider, live RAM and storage, **Free RAM** button, a switch between a clean *simple* view and a *detailed*, Windows-style view, and **English / Türkçe**. |
 | **Your phone as mouse + keyboard** | Open `http://<tv-ip>:8765` on any phone (iPhone or Android, no app): touchpad, scroll, D-pad, media keys, and live typing into any text field on the TV. PIN-protected. Works from anywhere over Tailscale. |
 | **Backdrop from the app itself** | Colours are extracted from each app's artwork, so the whole screen takes on YouTube red, PlayStation blue, Spotify green… |
 
@@ -141,7 +141,7 @@ Stack: Kotlin 2.2, Jetpack Compose + Compose for TV (`tv-material`), AGP 8.13, R
 
 ## Notes
 
-- The interface and script messages are in **Turkish** for now. The code, comments and this README are in English.
+- The interface is **English and Turkish**: it follows the TV's language, and *Control Center → English / Türkçe* switches TV Home alone (Android 13+). The phone touchpad follows the phone's language. Script messages are still Turkish.
 - Disabling packages and replacing the launcher are done with standard ADB commands and are fully reversible (`tv restore`, `tv untakeover`). Turn network ADB off when you are done (`tv lock`).
 - Not affiliated with Google, Grundig, Arçelik, Sony or any app shown. See [THIRD_PARTY.md](THIRD_PARTY.md) for fonts and libraries.
 

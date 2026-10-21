@@ -70,7 +70,11 @@ import androidx.tv.material3.Glow
 import androidx.tv.material3.Icon
 import androidx.tv.material3.Surface
 import androidx.tv.material3.Text
+import androidx.annotation.StringRes
+import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.res.stringResource
 import app.swiip.tvhome.AppCategory
+import app.swiip.tvhome.R
 import app.swiip.tvhome.HomePrefs
 import app.swiip.tvhome.QuickAction
 import app.swiip.tvhome.SystemStats
@@ -102,6 +106,7 @@ interface HomeActions {
     fun makeDefaultBrowser(app: TvApp)
     fun freeMemory()
     fun openWatch(item: WatchItem)
+    fun toggleLanguage()
 }
 
 /** [url] is null when the TV has no network; [enabled] is false until the PointerService is switched on. */
@@ -124,13 +129,13 @@ private val Hero.app: TvApp?
 
 enum class Overlay { None, Launchpad, Sources, Control, Search }
 
-private data class DockTool(val overlay: Overlay, val title: String, val subtitle: String, val icon: ImageVector)
+private data class DockTool(val overlay: Overlay, @StringRes val titleRes: Int, @StringRes val subtitleRes: Int, val icon: ImageVector)
 
 private val DockTools = listOf(
-    DockTool(Overlay.Launchpad, "Launchpad", "Tüm uygulamalar, kategorilere göre", Glyphs.Grid),
-    DockTool(Overlay.Sources, "Kaynaklar", "Anten, HDMI ve diğer girişler", Glyphs.Input),
-    DockTool(Overlay.Search, "Ara", "Uygulama, kaynak veya ayar", Glyphs.Search),
-    DockTool(Overlay.Control, "Kontrol Merkezi", "Ses, ağ, telefon fare ve sistem durumu", Glyphs.Sliders),
+    DockTool(Overlay.Launchpad, R.string.tool_launchpad, R.string.tool_launchpad_sub, Glyphs.Grid),
+    DockTool(Overlay.Sources, R.string.tool_sources, R.string.tool_sources_sub, Glyphs.Input),
+    DockTool(Overlay.Search, R.string.tool_search, R.string.tool_search_sub, Glyphs.Search),
+    DockTool(Overlay.Control, R.string.tool_control, R.string.tool_control_sub, Glyphs.Sliders),
 )
 
 private val NotContent = setOf("com.android.vending", "com.android.tv.settings", "com.google.android.tvlauncher", "com.google.android.apps.tv.launcherx")
@@ -152,6 +157,7 @@ fun DockHome(
     homeSignal: Int,
     actions: HomeActions,
 ) {
+    val context = LocalContext.current
     var hero by remember { mutableStateOf<Hero?>(null) }
     var lastApp by remember { mutableStateOf<TvApp?>(null) }
     var overlay by remember { mutableStateOf(Overlay.None) }
@@ -266,7 +272,11 @@ fun DockHome(
                     .align(Alignment.TopStart)
                     .padding(top = 290.dp)
             ) {
-                SectionLabel(if (recents.isNotEmpty() || watching.isNotEmpty()) "Devam et" else "Favoriler", watching.size + row.size, Modifier.padding(start = SidePadding))
+                SectionLabel(
+                    stringResource(if (recents.isNotEmpty() || watching.isNotEmpty()) R.string.home_continue else R.string.home_favorites),
+                    watching.size + row.size,
+                    Modifier.padding(start = SidePadding),
+                )
                 LazyRow(
                     contentPadding = PaddingValues(horizontal = SidePadding, vertical = 12.dp),
                     horizontalArrangement = Arrangement.spacedBy(16.dp),
@@ -292,7 +302,7 @@ fun DockHome(
                     items(row, key = { it.packageName }) { app ->
                         BannerCard(
                             app = app,
-                            caption = lastUsed[app.packageName]?.let(Usage::relative),
+                            caption = lastUsed[app.packageName]?.let { Usage.relative(context, it) },
                             onClick = { actions.openApp(app) },
                             onLongClick = { menuApp = app },
                             modifier = Modifier
@@ -311,7 +321,7 @@ fun DockHome(
             onFocusIndex = { dockFocus = it },
             onAppFocused = ::focusApp,
             onSourceFocused = { hero = Hero.Source(it) },
-            onToolFocused = { hero = Hero.Tool(it.title, it.subtitle) },
+            onToolFocused = { hero = Hero.Tool(context.getString(it.titleRes), context.getString(it.subtitleRes)) },
             onApp = actions::openApp,
             onAppMenu = { menuApp = it },
             onSource = actions::openSource,
@@ -410,7 +420,7 @@ private fun MenuBar(title: String, stats: SystemStats?, remote: RemoteHint?, det
         }
         if (stats != null) {
             Row(verticalAlignment = Alignment.CenterVertically) {
-                StatusItem(if (stats.network == "Ethernet") Glyphs.Ethernet else Glyphs.Wifi, stats.network)
+                StatusItem(if (stats.network == SystemStats.NetworkKind.ETHERNET) Glyphs.Ethernet else Glyphs.Wifi, stats.networkName(LocalContext.current))
                 if (stats.wifiBars >= 0) SignalBars(stats.wifiBars, Modifier.padding(start = 6.dp))
             }
             if (detailed) Text("RAM %${stats.ramPercent}", fontSize = 12.sp, color = if (stats.ramPercent > 85) Color(0xFFFBBF24) else Neon.Ink)
@@ -454,12 +464,14 @@ private fun Clock() {
             }
         }
     }
-    Text(now.format(DateFormat), fontSize = 12.sp)
+    // Formatter follows the app language ("Per 22 Eki" / "Thu 22 Oct"), so it is rebuilt when that changes.
+    val locale = LocalConfiguration.current.locales[0]
+    val dateFormat = remember(locale) { DateTimeFormatter.ofPattern("EEE d MMM", locale) }
+    Text(now.format(dateFormat), fontSize = 12.sp)
     Text(now.format(TimeFormat), fontSize = 12.sp, fontWeight = FontWeight.SemiBold)
 }
 
 private val TimeFormat = DateTimeFormatter.ofPattern("HH:mm")
-private val DateFormat = DateTimeFormatter.ofPattern("EEE d MMM", Locale.getDefault())
 
 @Composable
 private fun HeroInfo(
@@ -480,24 +492,24 @@ private fun HeroInfo(
             Column {
                 when (h) {
                     is Hero.App -> {
-                        Eyebrow(prefs.categoryOf(h.app).title)
+                        Eyebrow(stringResource(prefs.categoryOf(h.app).titleRes))
                         HeroTitle(h.app.label)
                         AppChips(h.app, lastUsed[h.app.packageName], prefs.detailed)
                     }
                     is Hero.Content -> {
-                        Eyebrow(h.app?.label ?: "Devam et")
+                        Eyebrow(h.app?.label ?: stringResource(R.string.home_continue))
                         HeroTitle(h.item.title)
                         Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                             h.item.subtitle?.let { Chip(it) }
-                            h.item.progress?.let { Chip("%${(it * 100).toInt()} izlendi") }
-                            if (h.item.lastEngaged > 0) Chip(Usage.relative(h.item.lastEngaged))
+                            h.item.progress?.let { Chip(stringResource(R.string.home_watched, (it * 100).toInt())) }
+                            if (h.item.lastEngaged > 0) Chip(Usage.relative(LocalContext.current, h.item.lastEngaged))
                         }
                     }
                     is Hero.Source -> {
-                        Eyebrow("Kaynak · ${h.source.detail}")
+                        Eyebrow(stringResource(R.string.home_input, h.source.detail))
                         HeroTitle(h.source.label)
                         Text(
-                            (if (h.source.connected) "Bağlı · " else "") + "OK ile geç, basılı tut: Dock ayarları",
+                            (if (h.source.connected) stringResource(R.string.home_input_connected) else "") + stringResource(R.string.home_input_hint),
                             fontSize = 15.sp,
                             color = Neon.Dim,
                         )
@@ -513,8 +525,8 @@ private fun HeroInfo(
         }
         AnimatedVisibility(visible = hero is Hero.App || hero is Hero.Content) {
             Row(Modifier.padding(top = 18.dp), horizontalArrangement = Arrangement.spacedBy(10.dp)) {
-                PillButton(if (hero is Hero.Content) "Devam et" else "Aç", onOpen, icon = Glyphs.Play, selected = true)
-                PillButton("Seçenekler", onMenu, icon = Glyphs.More)
+                PillButton(stringResource(if (hero is Hero.Content) R.string.home_continue else R.string.home_open), onOpen, icon = Glyphs.Play, selected = true)
+                PillButton(stringResource(R.string.home_options), onMenu, icon = Glyphs.More)
             }
         }
     }
@@ -561,7 +573,7 @@ private fun AppChips(app: TvApp, lastUsedAt: Long?, detailed: Boolean) {
         value = withContext(Dispatchers.IO) { Usage.sizeBytes(context, app.packageName) }
     }
     Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-        lastUsedAt?.let { Chip("Son açılış: ${Usage.relative(it)}") }
+        lastUsedAt?.let { Chip(stringResource(R.string.home_last_opened, Usage.relative(context, it))) }
         if (detailed) {
             size?.let { Chip(formatBytes(it)) }
             if (app.version.isNotBlank()) Chip("v" + app.version.take(14))
@@ -590,7 +602,7 @@ private fun HeroArt(app: TvApp?, content: WatchItem?, source: TvSource?, modifie
             source = source,
             markSize = 72.sp,
             glossy = true,
-            caption = source.detail + if (source.connected) " · bağlı" else "",
+            caption = source.detail + if (source.connected) " · " + stringResource(R.string.source_connected) else "",
             modifier = modifier
                 .size(320.dp, 180.dp)
                 .clip(shape)
@@ -753,7 +765,7 @@ private fun Dock(
                         .background(Brush.linearGradient(listOf(Color(0xFF2A3352), Color(0xFF171D30)))),
                     contentAlignment = Alignment.Center,
                 ) {
-                    Icon(tool.icon, tool.title, tint = Neon.Ink, modifier = Modifier.size(26.dp))
+                    Icon(tool.icon, stringResource(tool.titleRes), tint = Neon.Ink, modifier = Modifier.size(26.dp))
                 }
             }
         }
