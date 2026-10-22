@@ -2,10 +2,16 @@
 
 APKs for every version are on the [Releases](https://github.com/Ruzzyferr/tv-home/releases) page.
 
+## 1.2.1 · 2026-10-22
+
+### Fixed
+- **The opening animation now plays every time the TV turns on**, also when it went to sleep by itself or while another app (YouTube, Netflix…) was on screen. It used to play only when the home screen happened to be in front. It now runs in an overlay above whatever app is showing, and that app is right there when it ends.
+- The animation keeps the same speed whatever the system animation scale is.
+
 ## 1.2.0 · 2026-10-22
 
 ### New
-- **Opening animation** when the TV starts or wakes up. The Swiip wordmark rises in, two gold stars fall onto the dotless ı's, lift into eyes, and a grin draws itself underneath. It lasts about 8 seconds and any key skips it. It is drawn from vector outlines and renders at about 12 ms per frame on the test TV.
+- **Opening animation** when the TV starts or wakes up. The Swiip wordmark rises in, two gold stars fall onto the dotless ı's, lift into eyes, and a grin draws itself underneath. It lasts about 4 seconds and any key skips it. It is drawn from vector outlines and renders at about 12 ms per frame on the test TV.
 
 ### Fixed
 - **Holding OK on an IR remote no longer clicks the first menu entry.** An IR signal can drop for a moment while a button is held, so the long-press menu read the hold as a new press and added or removed the app from the Dock by itself. Menus now ignore OK until it has been quiet for 350 ms.

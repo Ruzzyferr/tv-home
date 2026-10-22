@@ -29,7 +29,9 @@ import androidx.compose.ui.graphics.drawscope.translate
 import androidx.compose.ui.graphics.drawscope.withTransform
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.graphics.vector.PathParser
+import androidx.compose.ui.MotionDurationScale
 import androidx.compose.ui.unit.dp
+import kotlinx.coroutines.withContext
 
 private val Ink = Color(0xFFF6EFE6)
 private val Gold = Color(0xFFFFC56B)
@@ -41,21 +43,29 @@ private val Bounce = CubicBezierEasing(.34f, 1.45f, .64f, 1f)
 private val Lift = CubicBezierEasing(.45f, 0f, .2f, 1f)
 private val Draw = CubicBezierEasing(.4f, 0f, .2f, 1f)
 
-/** The design timeline is 9 s (same keyframes as the swiip.app logo); the TV plays it a little faster, then holds the logo. */
-private const val SPEED = 1.2f
-private const val PLAY_MS = 9_000f / SPEED * 0.88f + 1_000f
-private const val FADE_MS = 650f
+/** The design timeline is 9 s (same keyframes as the swiip.app logo); the TV plays it faster, then holds the logo. */
+private const val SPEED = 2.4f
+private const val PLAY_MS = 9_000f / SPEED * 0.88f + 500f
+private const val FADE_MS = 325f
+
+/** Plays at the same speed whatever the system animation scale is (`tv perf` sets it to 0.5x). */
+private object RealTime : MotionDurationScale {
+    override val scaleFactor = 1f
+}
 
 /**
- * Swiip opening animation, shown when the TV starts: "swiip" rises in, two gold stars fall onto the dotless
+ * Swiip opening animation, shown when the TV turns on: "swiip" rises in, two gold stars fall onto the dotless
  * ı's, lift into eyes, a grin draws itself underneath and the face chuckles. Any key skips it.
+ * IntroOverlay plays it over whatever app is on screen.
  */
 @Composable
 fun SwiipIntro(onDone: () -> Unit) {
     val logo = remember { LogoPaths() }
     val clock = remember { Animatable(0f) }
     LaunchedEffect(Unit) {
-        clock.animateTo(PLAY_MS + FADE_MS, tween((PLAY_MS + FADE_MS).toInt(), easing = LinearEasing))
+        withContext(RealTime) {
+            clock.animateTo(PLAY_MS + FADE_MS, tween((PLAY_MS + FADE_MS).toInt(), easing = LinearEasing))
+        }
         onDone()
     }
     val ms = clock.value

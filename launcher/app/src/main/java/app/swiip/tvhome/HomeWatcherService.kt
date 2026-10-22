@@ -1,24 +1,48 @@
 package app.swiip.tvhome
 
 import android.accessibilityservice.AccessibilityService
+import android.content.BroadcastReceiver
+import android.content.Context
 import android.content.Intent
+import android.content.IntentFilter
 import android.os.SystemClock
 import android.util.Log
 import android.view.accessibility.AccessibilityEvent
+import androidx.core.content.ContextCompat
 
 /**
  * Google TV may refuse a third-party default HOME app. When the stock launcher's home activity
  * comes to the front (Home button), this service immediately brings TV Home forward instead.
  * The service only receives window changes from the stock launcher packages (see res/xml/home_watcher.xml).
+ * It also plays the Swiip intro every time the TV turns on, over whatever app is in front.
  */
 class HomeWatcherService : AccessibilityService() {
+
+    private val intro by lazy { IntroOverlay(this) }
+
+    private val screenOn = object : BroadcastReceiver() {
+        override fun onReceive(context: Context, intent: Intent) {
+            Log.d(TAG, "screen on: intro")
+            intro.show()
+        }
+    }
 
     /**
      * At boot the stock home screen is already showing before this service binds, so no window
      * event arrives. Binding shortly after boot therefore means "TV just turned on": open TV Home.
      */
     override fun onServiceConnected() {
-        if (SystemClock.elapsedRealtime() < BOOT_WINDOW_MS) openHome()
+        ContextCompat.registerReceiver(this, screenOn, IntentFilter(Intent.ACTION_SCREEN_ON), ContextCompat.RECEIVER_NOT_EXPORTED)
+        if (SystemClock.elapsedRealtime() < BOOT_WINDOW_MS) {
+            openHome()
+            intro.show()
+        }
+    }
+
+    override fun onDestroy() {
+        unregisterReceiver(screenOn)
+        intro.dismiss()
+        super.onDestroy()
     }
 
     override fun onAccessibilityEvent(event: AccessibilityEvent) {
