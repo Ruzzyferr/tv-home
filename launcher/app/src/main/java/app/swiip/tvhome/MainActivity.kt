@@ -10,16 +10,23 @@ import android.provider.Settings
 import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.input.key.KeyEventType
+import androidx.compose.ui.input.key.onPreviewKeyEvent
+import androidx.compose.ui.input.key.type
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.lifecycleScope
 import app.swiip.tvhome.remote.RemoteAccess
 import app.swiip.tvhome.ui.DockHome
 import app.swiip.tvhome.ui.HomeActions
 import app.swiip.tvhome.ui.RemoteHint
+import app.swiip.tvhome.ui.SwiipIntro
 import app.swiip.tvhome.ui.TvHomeTheme
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -38,8 +45,16 @@ class MainActivity : ComponentActivity(), HomeActions {
     private var lastUsed by mutableStateOf<Map<String, Long>>(emptyMap())
     private var watching by mutableStateOf<List<WatchItem>>(emptyList())
     private var homeSignal by mutableIntStateOf(0)
+    private var intro by mutableStateOf(false)
     private var reloadJob: Job? = null
     private var statsJob: Job? = null
+
+    /** The TV woke up: play the intro again the next time the home screen comes to the front. */
+    private val screenOnReceiver = object : BroadcastReceiver() {
+        override fun onReceive(context: Context, intent: Intent) {
+            introPending = true
+        }
+    }
 
     /** Install / uninstall / update: rebuild the lists, which also creates or drops category rows. */
     private val packageReceiver = object : BroadcastReceiver() {
@@ -51,9 +66,17 @@ class MainActivity : ComponentActivity(), HomeActions {
         prefs = HomePrefs(this)
         setContent {
             TvHomeTheme {
-                DockHome(apps, sources, prefs, remote, stats, lastUsed, watching, homeSignal, this)
+                // While the intro plays every key is swallowed; releasing one skips it.
+                Box(Modifier.fillMaxSize().onPreviewKeyEvent { e ->
+                    if (intro && e.type == KeyEventType.KeyUp) intro = false
+                    intro
+                }) {
+                    DockHome(apps, sources, prefs, remote, stats, lastUsed, watching, homeSignal, this@MainActivity)
+                    if (intro) SwiipIntro(onDone = { intro = false })
+                }
             }
         }
+        ContextCompat.registerReceiver(this, screenOnReceiver, IntentFilter(Intent.ACTION_SCREEN_ON), ContextCompat.RECEIVER_NOT_EXPORTED)
         val filter = IntentFilter().apply {
             addAction(Intent.ACTION_PACKAGE_ADDED)
             addAction(Intent.ACTION_PACKAGE_REMOVED)
@@ -67,6 +90,10 @@ class MainActivity : ComponentActivity(), HomeActions {
 
     override fun onResume() {
         super.onResume()
+        if (introPending) {
+            introPending = false
+            intro = true
+        }
         remote = remoteHint()
         lifecycleScope.launch { lastUsed = withContext(Dispatchers.IO) { Usage.lastUsed(this@MainActivity) } }
         lifecycleScope.launch {
@@ -100,6 +127,7 @@ class MainActivity : ComponentActivity(), HomeActions {
 
     override fun onDestroy() {
         unregisterReceiver(packageReceiver)
+        unregisterReceiver(screenOnReceiver)
         super.onDestroy()
     }
 
@@ -181,4 +209,9 @@ class MainActivity : ComponentActivity(), HomeActions {
     }
 
     private fun toast(message: String) = Toast.makeText(this, message, Toast.LENGTH_LONG).show()
+
+    private companion object {
+        /** True when the process has just started (the TV booted) or the screen came back on. */
+        var introPending = true
+    }
 }

@@ -4,6 +4,7 @@
 |---|---|---|
 | [Sora](https://github.com/sora-xor/sora-font) font (`launcher/app/src/main/res/font/sora.ttf`) | Display type | SIL Open Font License 1.1 |
 | [Onest](https://github.com/simpals/onest) font (`launcher/app/src/main/res/font/onest.ttf`) | Body type | SIL Open Font License 1.1 |
+| [Unbounded](https://github.com/googlefonts/unbounded) glyph outlines (`ui/SwiipLogo.kt`) | Swiip wordmark in the opening animation | SIL Open Font License 1.1 |
 | [NanoHTTPD](https://github.com/NanoHttpd/nanohttpd) 2.3.1 | Phone-touchpad web server + WebSocket | BSD 3-Clause |
 | AndroidX / Jetpack Compose / Compose for TV | UI | Apache 2.0 |
 
