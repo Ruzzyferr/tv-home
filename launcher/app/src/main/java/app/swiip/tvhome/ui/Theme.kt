@@ -1,6 +1,7 @@
 package app.swiip.tvhome.ui
 
 import android.os.Build
+import android.os.SystemClock
 import android.view.WindowManager
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.spring
@@ -101,22 +102,29 @@ fun TvHomeTheme(content: @Composable () -> Unit) {
 
 /**
  * A menu opened by holding OK receives that same press's repeats and its release, which would "click" the
- * first entry by itself. Only an OK press that starts after the window opened is let through.
+ * first entry by itself. An IR remote also drops the signal for a moment while held, so the hold arrives as
+ * release + a new press with repeatCount 0. OK is therefore swallowed until it has been quiet for a moment;
+ * the first press after that, and everything after it, goes through.
  */
 @Composable
 fun Modifier.ignoreHeldOk(): Modifier {
-    var armed by remember { mutableStateOf(false) }
+    val hold = remember { HeldOk(SystemClock.uptimeMillis()) }
     return onPreviewKeyEvent { e ->
         val isOk = e.key == Key.DirectionCenter || e.key == Key.Enter || e.key == Key.NumPadEnter
         if (!isOk) return@onPreviewKeyEvent false
-        when (e.type) {
-            KeyEventType.KeyDown -> {
-                if (e.nativeKeyEvent.repeatCount == 0) armed = true
-                !armed
-            }
-            KeyEventType.KeyUp -> !armed
-            else -> false
-        }
+        val time = e.nativeKeyEvent.eventTime
+        if (!hold.released && e.type == KeyEventType.KeyDown && time - hold.lastOk >= HeldOk.QUIET_MS) hold.released = true
+        hold.lastOk = time
+        !hold.released
+    }
+}
+
+private class HeldOk(var lastOk: Long) {
+    var released = false
+
+    companion object {
+        /** Longer than the gap between key repeats and IR dropouts, shorter than a deliberate second press. */
+        const val QUIET_MS = 350L
     }
 }
 
