@@ -4,7 +4,9 @@
 
 Built for and tested on a 2024 **Grundig Nano QLED (Google TV, Android 14, MediaTek MT5896, 2.4 GB RAM)**. It should run on any Android TV / Google TV 9+.
 
-![TV Home: continue watching a YouTube video](docs/screenshots/continue-watching.png)
+![TV Home in action: Dock magnification, app-coloured backdrop, continue watching with in-video frames, Launchpad](docs/demo.gif)
+
+<sub>Recorded on the TV itself (`adb shell screenrecord`), driven by the remote's D-pad.</sub>
 
 ---
 
@@ -23,11 +25,11 @@ Built for and tested on a 2024 **Grundig Nano QLED (Google TV, Android 14, Media
 
 <table>
 <tr>
-<td><img src="docs/screenshots/dock-ps5.png" alt="PS5 pinned to the Dock"></td>
+<td><img src="docs/screenshots/continue-watching.png" alt="Continue watching a YouTube video"></td>
 <td><img src="docs/screenshots/launchpad.png" alt="Launchpad with automatic categories"></td>
 </tr>
 <tr>
-<td align="center">PS5 pinned to the Dock, brand backdrop</td>
+<td align="center">Continue watching: title, channel, progress, frames from inside the video</td>
 <td align="center">Launchpad, filtered by focusing a category</td>
 </tr>
 <tr>
@@ -40,11 +42,11 @@ Built for and tested on a 2024 **Grundig Nano QLED (Google TV, Android 14, Media
 </tr>
 <tr>
 <td><img src="docs/screenshots/spotlight.png" alt="Spotlight search"></td>
-<td><img src="docs/screenshots/home.png" alt="Home screen"></td>
+<td><img src="docs/screenshots/dock-ps5.png" alt="PS5 pinned to the Dock"></td>
 </tr>
 <tr>
-<td align="center">Spotlight: category words find apps</td>
-<td align="center">Home: app info, recents and the Dock</td>
+<td align="center">Spotlight: "sport" finds every sports app</td>
+<td align="center">PS5 pinned to the Dock, PlayStation-blue backdrop</td>
 </tr>
 </table>
 

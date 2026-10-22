@@ -214,7 +214,7 @@ fun ControlCenter(stats: SystemStats?, remote: RemoteHint?, prefs: HomePrefs, ac
         Column(
             Modifier
                 .align(Alignment.TopEnd)
-                .padding(top = 40.dp, end = 24.dp)
+                .padding(top = 28.dp, end = 24.dp)
                 .width(352.dp)
                 .glass(RoundedCornerShape(26.dp), Neon.Panel)
                 .padding(14.dp),
@@ -260,9 +260,10 @@ fun ControlCenter(stats: SystemStats?, remote: RemoteHint?, prefs: HomePrefs, ac
             Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                 PillButton(stringResource(R.string.cc_all_settings), { open(QuickAction.SETTINGS) }, icon = Glyphs.Gear)
                 PillButton(stringResource(R.string.cc_apps), { open(QuickAction.APPS) }, icon = Glyphs.Grid)
-                // Shows the language it switches to, in that language ("English" / "Türkçe").
-                if (AppLanguage.isSupported()) PillButton(stringResource(R.string.cc_language), actions::toggleLanguage, icon = Glyphs.Globe)
             }
+            // Own row: next to two other pills it was squeezed down to its icon.
+            // It shows the language it switches to, in that language ("English" / "Türkçe").
+            if (AppLanguage.isSupported()) PillButton(stringResource(R.string.cc_language), actions::toggleLanguage, icon = Glyphs.Globe)
         }
         FocusOnOpen(first)
     }
@@ -273,7 +274,8 @@ private fun ControlTile(icon: ImageVector, title: String, detail: String, onClic
     val shape = RoundedCornerShape(20.dp)
     Surface(
         onClick = onClick,
-        modifier = modifier.height(84.dp).touchable(onClick),
+        // 70dp keeps the whole panel on screen with the language row added (two-line English labels fit).
+        modifier = modifier.height(70.dp).touchable(onClick),
         shape = ClickableSurfaceDefaults.shape(shape),
         colors = ClickableSurfaceDefaults.colors(containerColor = Neon.Glass, focusedContainerColor = Neon.GlassHigh, focusedContentColor = Neon.Ink),
         scale = ClickableSurfaceDefaults.scale(focusedScale = 1.04f),
@@ -287,8 +289,8 @@ private fun ControlTile(icon: ImageVector, title: String, detail: String, onClic
             ) { Icon(icon, null, tint = Neon.Space, modifier = Modifier.size(18.dp)) }
             Spacer(Modifier.width(10.dp))
             Column {
-                Text(title, fontSize = 13.sp, fontWeight = FontWeight.SemiBold)
-                Text(detail, fontSize = 10.sp, color = Neon.Dim, lineHeight = 13.sp, maxLines = 2)
+                Text(title, fontSize = 12.sp, fontWeight = FontWeight.SemiBold, maxLines = 1, overflow = TextOverflow.Ellipsis)
+                Text(detail, fontSize = 10.sp, color = Neon.Dim, lineHeight = 12.sp, maxLines = 2, overflow = TextOverflow.Ellipsis)
             }
         }
     }

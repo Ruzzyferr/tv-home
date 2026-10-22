@@ -74,7 +74,7 @@
     <string name="cc_mouse_off">Kapalı</string>
     <string name="cc_mouse_no_network">Ağ yok</string>
     <string name="cc_mouse_hidden">Açık · adres için Ayrıntılar</string>
-    <string name="cc_display">Görüntü &amp; Ses</string>
+    <string name="cc_display">Görüntü</string>
     <string name="cc_display_detail">Mod, ses çıkışı</string>
     <string name="cc_ram">RAM</string>
     <string name="cc_storage">Depolama</string>

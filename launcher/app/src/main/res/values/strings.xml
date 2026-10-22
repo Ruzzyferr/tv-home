@@ -81,8 +81,8 @@
     <string name="cc_mouse_off">Off</string>
     <string name="cc_mouse_no_network">No network</string>
     <string name="cc_mouse_hidden">On · address under Details</string>
-    <string name="cc_display">Picture &amp; Sound</string>
-    <string name="cc_display_detail">Mode, audio output</string>
+    <string name="cc_display">Display</string>
+    <string name="cc_display_detail">Picture mode, sound</string>
     <string name="cc_ram">RAM</string>
     <string name="cc_storage">Storage</string>
     <string name="cc_free_ram">Free RAM</string>
