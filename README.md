@@ -100,7 +100,7 @@ A simulated panel of 10 users aged 16–55 (via a persona-panel tool, not real p
 
 A full step-by-step guide in Turkish (remote access with Tailscale, mirroring from iPhone/Mac/Windows, browsers, settings) is in [docs/KURULUM.md](docs/KURULUM.md).
 
-A prebuilt APK is on the [Releases](../../releases) page. It is signed with a debug key, which is fine for sideloading but not for the Play Store.
+A prebuilt APK is on the [Releases](../../releases) page. It is signed with a debug key, which is fine for sideloading but not for the Play Store. What changed in each version is in [CHANGELOG.md](CHANGELOG.md).
 
 ## How it works
 
