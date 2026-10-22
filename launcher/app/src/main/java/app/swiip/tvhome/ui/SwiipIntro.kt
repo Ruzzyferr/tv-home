@@ -41,10 +41,10 @@ private val Bounce = CubicBezierEasing(.34f, 1.45f, .64f, 1f)
 private val Lift = CubicBezierEasing(.45f, 0f, .2f, 1f)
 private val Draw = CubicBezierEasing(.4f, 0f, .2f, 1f)
 
-/** The design timeline is 9 s (same keyframes as the swiip.app logo); the TV plays it 1.5x faster. */
-private const val SPEED = 1.5f
-private const val PLAY_MS = 9_000f / SPEED * 0.88f
-private const val FADE_MS = 450f
+/** The design timeline is 9 s (same keyframes as the swiip.app logo); the TV plays it a little faster, then holds the logo. */
+private const val SPEED = 1.2f
+private const val PLAY_MS = 9_000f / SPEED * 0.88f + 1_000f
+private const val FADE_MS = 650f
 
 /**
  * Swiip opening animation, shown when the TV starts: "swiip" rises in, two gold stars fall onto the dotless
